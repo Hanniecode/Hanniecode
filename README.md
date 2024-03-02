@@ -4,7 +4,7 @@
 - 💞️ I’m looking to collaborate on research group
 - 📫 You can reach me through purplelzh01@gmail.com
 - 😄 Pronouns: She/Her
-- ⚡ Fun fact: I am the singer in the band
+- ⚡ Fun fact: I am the lead singer in the band
 
 <!---
 Hanniecode/Hanniecode is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
