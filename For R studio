@@ -1,0 +1,38 @@
+###pre research simulation
+nSim < -  1000
+n < -  1000
+ 
+unadjustedEst < -  array（0，dim = nSim）
+IPTW_Est < -  array（0，dim = nSim）
+ 
+for（i in 1：nSim）{
+ 
+z < -  1 *（runif（n）<0.5）
+x < -  rnorm（n）
+xb < -  x + z
+prob < -  exp（xb）/（1 + exp（xb））
+y < -  1 *（runif（n）<prob）
+ 
+unarrange< -  glm（y~z，family = binomial）
+ 
+#IPTW simulation
+#first find whether we could use PSM
+propModel < -  glm（z~x，family = binomial）
+fitted_p < - y（propModel）
+
+#calculate weights of each x
+wgt < -  1 / fitted_p
+wgt [z == 0] < -  1 /（1-fitted_p [z == 0]）
+ 
+iptwMod < -  glm（y~z，family = binomial，weight = wgt）
+IPTW_Est [i] < -  iptwMod $ coef [2]
+ 
+}
+
+#find the better one
+> mean（unadjustedEst）
+> sd（unadjustedEst）
+
+> mean（IPTW_Est）
+> sd（IPTW_Est）
+
