@@ -1,0 +1,45 @@
+*/
+*data consistency
+describe
+
+* find missing value in each categories
+drop if missing (age) | drop if missing (gender) | drop if missing (education) | drop if missing (area) | drop if missing (employment) 
+
+* deal with strange values
+drop if education < 0
+
+*缩尾 winsorsize 
+ssc install winsor2, replace
+replace cuts(1 99)
+
+*description
+summarize age gender eductaion area employment
+
+*Parallel trend test 平行趋势检验
+xtest id year
+xtreg employment policy time age gender education employment area, fe
+
+
+*in https://www.stata.com/stata17/difference-in-differences-DID-DDD/
+* webuse hospdd
+* didregress (satis) (procedure), group(hospital) time(month)
+
+*DID model
+xtreg employment policy time age gender education employment area, fe
+
+*DDD model
+*tt 是交乘项
+*cv 是control vars
+*corp 讨论的是上市企业
+* tt = treat * post
+
+*stability 安慰剂检验 Placebo Test
+local random_year =runiformint(policy_year - 5, policy_year -1)//  choose a year randomly 
+gen placebo_policy = (treatment == 1 & year >= 'random_year'
+gen placebo_policy_time = placebo_policy * placebo_time
+xtreg employment placebo_policy placebo_time placebo_policy_time age gender eductaion area employment, fe
+
+*异质性分析 Heterogeneity Analysis
+*为了深入了解政策在不同群体中的效果，可以进行异质性分析。例如，分析政策对不同年龄段、性别和教育水平群体的影响。
+/*
+
