@@ -1,4 +1,4 @@
-*/
+
 *data consistency
 describe
 
@@ -27,11 +27,14 @@ xtreg employment policy time age gender education employment area, fe
 *DID model
 xtreg employment policy time age gender education employment area, fe
 
-*DDD model
-*tt 是交乘项
-*cv 是control vars
-*corp 讨论的是上市企业
+* DDD model
+* tt is intermodal term
+* cv is control vars
+* id  is about idividuals
 * tt = treat * post
+* then regression process:
+
+
 
 *stability 安慰剂检验 Placebo Test
 local random_year =runiformint(policy_year - 5, policy_year -1)//  choose a year randomly 
@@ -40,6 +43,7 @@ gen placebo_policy_time = placebo_policy * placebo_time
 xtreg employment placebo_policy placebo_time placebo_policy_time age gender eductaion area employment, fe
 
 *异质性分析 Heterogeneity Analysis
-*为了深入了解政策在不同群体中的效果，可以进行异质性分析。例如，分析政策对不同年龄段、性别和教育水平群体的影响。
-/*
+* In order to gain insights into the effects of policies among different groups, heterogeneity analyses can be conducted. 
+* For example, analyzing the effects of policies on groups of different age groups, genders and levels of education.
+
 
