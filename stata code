@@ -1,6 +1,28 @@
+*import dataset from excel
+import excel "xxx.xlsx", firstrow
+
+*import dataset from csv
+import delimited "xxx.csv", delimiter(",")
+
+*import dataset from stata
+use "xxx.dta",clear
 
 *data consistency
 describe
+list in 1/5
+
+*if need export
+export excel using "xxx.xlsx", firstrow(variables)
+
+*generate new vars
+gen new_var = var1 * var2
+
+*change data attribute
+gen data_v =data(data_string, "DMY")
+
+*from string to number
+gen year = real(substr("date", 1, 4))
+destring year, replace
 
 * find missing value in each categories
 drop if missing (age) | drop if missing (gender) | drop if missing (education) | drop if missing (area) | drop if missing (employment) 
@@ -14,6 +36,22 @@ replace cuts(1 99)
 
 *description
 summarize age gender eductaion area employment
+
+*Relevance check
+histogram x
+
+scatter x y
+
+graph matrix var1 var2 var3
+
+pwcorr var1 var2 var3, sig star(0.05) matrix(corr_matrix)
+matrix plot corr_matrix
+
+twoway(scatter var1 var2) (lfit var1 var2)
+
+*correlative 
+pwcorr var
+pwcorr_a var
 
 *Parallel trend test 平行趋势检验
 xtest id year
@@ -45,5 +83,6 @@ xtreg employment placebo_policy placebo_time placebo_policy_time age gender educ
 *异质性分析 Heterogeneity Analysis
 * In order to gain insights into the effects of policies among different groups, heterogeneity analyses can be conducted. 
 * For example, analyzing the effects of policies on groups of different age groups, genders and levels of education.
+
 
 
