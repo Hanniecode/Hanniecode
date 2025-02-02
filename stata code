@@ -57,6 +57,42 @@ pwcorr_a var
 xtest id year
 xtreg employment policy time age gender education employment area, fe
 
+* model for empirical analysis
+* one var
+
+install ttable3
+* logout,save (as title of the doc) word replace: ttable3 y,by (x) f(%8.4f) notitle
+
+*OLS Regression
+reg y x x1 x2 x3
+
+*get result
+est store reg1
+*%6.4f is a kind of font format
+esttab reg1 using xxx.rtf, replace nogap ar2 b(%6.4f)
+
+*quantile regression
+sqreg y x1 x2 x3 ,q(.1 .25 .75 .9)
+
+*Probit model
+probit y x x1 x2 x3
+
+*Logit model
+logit y x x1 x2 x3
+
+*Tobit model
+xttobit y x x1 x2 x3, 11(0) nolog tobit
+
+
+*Instrumental Variables model(IV model)
+ivregress 2sls y w (x1 x2 c.x1#c.x2 =z1 z2 c.z1#c.z2)
+
+*Fixed Effects model
+xtest id year
+xtreg y x1 x2 x3, fe
+
+*specific useful model of this method are as follows(for Policy empirical analysis）
+
 
 *in https://www.stata.com/stata17/difference-in-differences-DID-DDD/
 * webuse hospdd
