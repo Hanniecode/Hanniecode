@@ -91,6 +91,16 @@ ivregress 2sls y w (x1 x2 c.x1#c.x2 =z1 z2 c.z1#c.z2)
 xtest id year
 xtreg y x1 x2 x3, fe
 
+*Random effects model
+*To verify that individual effects are random and irrelevant.
+xtreg y x x1 x2 x3, re
+est store reg2
+
+*System GMM model
+*Dealing with Colleague Equation Bias and Unobserved Variable Bias in Dynamic Panel Data
+xtabond2 y L.y x x1 x2 x3, iv(x1 x2 x3) gmm(L.y L.(x), lag(1 2) c)
+robust twostep
+
 *specific useful model of this method are as follows(for Policy empirical analysis）
 
 
@@ -108,7 +118,40 @@ xtreg employment policy time age gender education employment area, fe
 * tt = treat * post
 * then regression process:
 
+*PSM model
+*Generating dummy variable models for explanatory variables
+bys year Industry:egen PLD_RATE1=median(PLD_rate)
+gen if PLD_rate =(PLD_rate>=PLD_RATE1) if!missing(PLD_rate)
+*...
+pstest, both
 
+*Analysis of test
+*Hausmann test
+xtreg y x x1 x2 x3, re
+est store re
+xtreg y x x1 x2 x3, fe
+est store fe
+hausman fe re
+
+*Moderating effect test
+reg y x x1 x2 x3
+reg y x m x1 x2 x3
+*m is moderating var
+reg y x x*m x1 x2 x3
+
+*mediation effect test
+*method1
+reg y x x1 x2 x3 //x1 x2 x3 are control vars
+reg Z x x1 x2 x3 //Z is IV var
+reg y x Z x1 x2 x3
+
+*method 2 Sobel-Goodman test
+sgmediation y, mv(x) iv(Z) cv(x1 x2 x3)
+
+*method 3 Bootstrap test
+*ind_eff is indirect effect
+bootstrap r(ind_eff) r(dir_eff), reps(1000):sgmediation y, mv(x) iv(Z) cv(x1 x2 x3)
+estat bootstrap, percentile bc
 
 *stability 安慰剂检验 Placebo Test
 local random_year =runiformint(policy_year - 5, policy_year -1)//  choose a year randomly 
