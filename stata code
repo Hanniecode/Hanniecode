@@ -163,5 +163,17 @@ xtreg employment placebo_policy placebo_time placebo_policy_time age gender educ
 * In order to gain insights into the effects of policies among different groups, heterogeneity analyses can be conducted. 
 * For example, analyzing the effects of policies on groups of different age groups, genders and levels of education.
 
+*****result export
+
+outreg2 using xxx.doc, replace sum(log) title(descriptive stats) //to get xxx.doc with general descriptive stas
+
+install pwcorr_a
+logout, save (correl_analysis) word replace:pwcorr_a x1 x2 x3 star1(.01) star5(.05) star10(.1)
+
+* Panel data regression results
+webuse grunfeld, clear
+xtset id year *id is idividual 
+xtreg x1 x2 x3, fe robust
+* outreg2 using xxx.doc, replace ...
 
 
